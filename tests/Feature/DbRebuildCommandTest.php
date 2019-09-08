@@ -27,10 +27,10 @@ class DbRebuildCommandTest extends TestCase
         $command = $this->runCommand(app(DbRebuild::class), [], ['Yes']);
         $output = $command->getDisplay();
 
-        $this->assertContains('This will drop all tables in db_rebuild. Are you sure you want to do this? [yes|no]', $output);
-        $this->assertContains('All tables in db_rebuild dropped!', $output);
-        $this->assertContains('Migration started', $output);
-        $this->assertContains('Migration finished', $output);
+        $this->assertStringContainsString('This will drop all tables in db_rebuild. Are you sure you want to do this? [yes|no]', $output);
+        $this->assertStringContainsString('All tables in db_rebuild dropped!', $output);
+        $this->assertStringContainsString('Migration started', $output);
+        $this->assertStringContainsString('Migration finished', $output);
     }
 
     public function testCancel(): void
@@ -47,12 +47,12 @@ class DbRebuildCommandTest extends TestCase
         $command = $this->runCommand(app(DbRebuild::class), [], ['No']);
         $output = $command->getDisplay();
 
-        $this->assertContains('This will drop all tables in db_rebuild. Are you sure you want to do this? [yes|no]', $output);
-        $this->assertContains('Stopped rebuild process!', $output);
-        $this->assertNotContains('All tables in db_rebuild dropped!', $output);
-        $this->assertNotContains('Migration started', $output);
-        $this->assertNotContains('Migration finished', $output);
-        $this->assertNotContains('Calling seeder: Webparking\\DbRebuild\\Tests\\Database\\DatabaseSeeder', $output);
+        $this->assertStringContainsString('This will drop all tables in db_rebuild. Are you sure you want to do this? [yes|no]', $output);
+        $this->assertStringContainsString('Stopped rebuild process!', $output);
+        $this->assertStringNotContainsString('All tables in db_rebuild dropped!', $output);
+        $this->assertStringNotContainsString('Migration started', $output);
+        $this->assertStringNotContainsString('Migration finished', $output);
+        $this->assertStringNotContainsString('Calling seeder: Webparking\\DbRebuild\\Tests\\Database\\DatabaseSeeder', $output);
     }
 
     public function testForce(): void
@@ -67,10 +67,10 @@ class DbRebuildCommandTest extends TestCase
         $command = $this->runCommand(app(DbRebuild::class), ['--f' => true], ['Yes']);
         $output = $command->getDisplay();
 
-        $this->assertNotContains('This will drop all tables in db_rebuild. Are you sure you want to do this? [yes|no]', $output);
-        $this->assertContains('All tables in db_rebuild dropped!', $output);
-        $this->assertContains('Migration started', $output);
-        $this->assertContains('Migration finished', $output);
+        $this->assertStringNotContainsString('This will drop all tables in db_rebuild. Are you sure you want to do this? [yes|no]', $output);
+        $this->assertStringContainsString('All tables in db_rebuild dropped!', $output);
+        $this->assertStringContainsString('Migration started', $output);
+        $this->assertStringContainsString('Migration finished', $output);
     }
 
     public function testSeed(): void
@@ -87,7 +87,7 @@ class DbRebuildCommandTest extends TestCase
         $command = $this->runCommand(app(DbRebuild::class), [], ['Yes']);
         $output = $command->getDisplay();
 
-        $this->assertContains('Calling seeder: Webparking\\DbRebuild\\Tests\\Database\\DatabaseSeeder', $output);
+        $this->assertStringContainsString('Calling seeder: Webparking\\DbRebuild\\Tests\\Database\\DatabaseSeeder', $output);
     }
 
     public function testCommands(): void
@@ -104,7 +104,7 @@ class DbRebuildCommandTest extends TestCase
         $command = $this->runCommand(app(DbRebuild::class), [], ['Yes']);
         $output = $command->getDisplay();
 
-        $this->assertContains('Calling command: view:clear', $output);
+        $this->assertStringContainsString('Calling command: view:clear', $output);
     }
 
     public function testBackupWithoutTable(): void
@@ -121,7 +121,7 @@ class DbRebuildCommandTest extends TestCase
         $command = $this->runCommand(app(DbRebuild::class), [], ['Yes']);
         $output = $command->getDisplay();
 
-        $this->assertContains('Table not found: non_existing_table', $output);
+        $this->assertStringContainsString('Table not found: non_existing_table', $output);
     }
 
     public function testBackup(): void
@@ -156,8 +156,8 @@ class DbRebuildCommandTest extends TestCase
         $command = $this->runCommand(app(DbRebuild::class), [], ['Yes']);
         $output = $command->getDisplay();
 
-        $this->assertContains('Backing up test_table', $output);
-        $this->assertContains('Restoring test_table', $output);
+        $this->assertStringContainsString('Backing up test_table', $output);
+        $this->assertStringContainsString('Restoring test_table', $output);
 
         $this->assertDatabaseHas('test_table', [
             'id' => 'test',
@@ -179,7 +179,7 @@ class DbRebuildCommandTest extends TestCase
         $command = $this->runCommand(app(DbRebuild::class), [], ['Yes']);
         $output = $command->getDisplay();
 
-        $this->assertContains('Rebuilding in production is not allowed!', $output);
+        $this->assertStringContainsString('Rebuilding in production is not allowed!', $output);
 
         app()['env'] = 'testing';
     }

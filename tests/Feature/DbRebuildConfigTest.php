@@ -28,7 +28,7 @@ class DbRebuildConfigTest extends TestCase
         $command = $this->runCommand(app(DbRebuild::class), ['--preset' => 'test'], ['No']);
         $output = $command->getDisplay();
 
-        $this->assertContains('This will drop all tables in test_database. Are you sure you want to do this? [yes|no]', $output);
+        $this->assertStringContainsString('This will drop all tables in test_database. Are you sure you want to do this? [yes|no]', $output);
     }
 
     public function testNonExistingPreset(): void
